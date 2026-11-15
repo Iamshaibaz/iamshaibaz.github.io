@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shaibaz Mohammed, SDET Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: the portfolio reads like a test-run report. Summary strip first, then suites (projects), then logs (experience). */
+:root {
+  --bg: #f5f7f9;
+  --surface: #ffffff;
+  --ink: #14202b;
+  --muted: #5a6977;
+  --line: #dde3e9;
+  --accent: #1f5fbf;
+  --accent-soft: #e6eefa;
+  --pass: #17845a;
+  --pass-soft: #e3f4ec;
+  --display: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e151c; --surface: #151f29; --ink: #e4eaf0; --muted: #96a5b3; --line: #253341;
+    --accent: #6ea5f5; --accent-soft: #1a2c44; --pass: #4cc98f; --pass-soft: #14322a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e151c; --surface: #151f29; --ink: #e4eaf0; --muted: #96a5b3; --line: #253341;
+  --accent: #6ea5f5; --accent-soft: #1a2c44; --pass: #4cc98f; --pass-soft: #14322a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { overflow-x: clip; }
+html { scrollbar-gutter: stable; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.mono { font-family: var(--mono); }
+
+/* Nav */
+nav { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 5; }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 56px; }
+nav .brand { font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--ink); }
+nav ul { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; font-size: 14px; }
+nav ul a { color: var(--muted); }
+nav ul a:hover { color: var(--ink); text-decoration: none; }
+@media (max-width: 640px) { nav ul { display: none; } }
+
+/* Hero */
+header.hero { padding: 64px 0 40px; }
+.hero .tag { font-family: var(--mono); font-size: 13px; color: var(--pass); background: var(--pass-soft); display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 4px; }
+.hero .tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--pass); }
+.hero h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 700; margin-top: 18px; letter-spacing: -0.01em; }
+.hero .role { font-size: clamp(18px, 2.4vw, 22px); color: var(--muted); margin-top: 6px; font-weight: 500; }
+.hero p.lead { max-width: 65ch; font-size: 17px; margin: 22px 0 0; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.btn { font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+:root[data-theme="dark"] .btn.primary { color: #0e151c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #0e151c; } }
+.btn:hover { text-decoration: none; border-color: var(--accent); }
+
+/* Run summary */
+.run { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.run-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 12px 18px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.run-head b { color: var(--pass); font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); }
+.stat { padding: 18px; border-right: 1px solid var(--line); }
+.stat:last-child { border-right: 0; }
+.stat .n { font-family: var(--mono); font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat .l { font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 4px; }
+@media (max-width: 860px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat { border-bottom: 1px solid var(--line); }
+  .stat:nth-child(2n) { border-right: 0; }
+  .stat:last-child { grid-column: 1 / -1; border-bottom: 0; }
+}
+
+/* Sections */
+section { padding: 64px 0 0; }
+.sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+.sec-head .idx { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.sec-head h2 { font-size: 28px; font-weight: 700; }
+
+/* Projects */
+.projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+@media (max-width: 760px) { .projects { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+.card.feature { grid-column: 1 / -1; border-left: 4px solid var(--accent); }
+.card .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.card h3 { font-size: 20px; font-weight: 600; }
+.card dl { margin: 0; display: grid; grid-template-columns: 92px 1fr; gap: 6px 14px; font-size: 15px; }
+.card dt { font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; padding-top: 3px; }
+.card dd { margin: 0; }
+@media (max-width: 480px) { .card dl { grid-template-columns: 1fr; } .card dt { padding-top: 6px; } }
+.result { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font-family: var(--mono); font-size: 12px; padding: 3px 9px; border-radius: 4px; background: var(--pass-soft); color: var(--pass); font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px; }
+.chip { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); }
+
+/* Architecture */
+.arch { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px; overflow-x: auto; overflow-y: hidden; }
+.arch-grid { display: grid; grid-template-columns: 170px 1fr; gap: 10px 18px; min-width: 560px; padding: 4px 0; align-items: stretch; }
+.arch .layer { font-family: var(--mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; }
+.arch .boxes { display: flex; flex-wrap: wrap; gap: 8px; }
+.arch .box { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 8px 12px; font-size: 14px; }
+.arch .box b { font-weight: 600; }
+.arch .box span { display: block; font-size: 12px; color: var(--muted); }
+.arch .box.ci { border-color: var(--pass); background: var(--pass-soft); }
+.arch-note { font-size: 14px; color: var(--muted); margin: 18px 0 0; max-width: 70ch; }
+
+/* Experience */
+.timeline { display: grid; gap: 18px; }
+.job { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: grid; grid-template-columns: 200px 1fr; gap: 20px; }
+@media (max-width: 700px) { .job { grid-template-columns: 1fr; gap: 10px; } }
+.job .when { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.job .co { font-size: 15px; font-weight: 600; color: var(--ink); margin-top: 4px; font-family: var(--body); }
+.job h3 { font-size: 19px; font-weight: 600; }
+.job ul { margin: 10px 0 0; padding-left: 18px; }
+.job li { margin: 6px 0; }
+.job li::marker { color: var(--pass); }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+@media (max-width: 700px) { .skills { grid-template-columns: 1fr; } }
+.skill-row { padding: 16px 20px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 130px 1fr; gap: 12px; }
+.skill-row:nth-child(odd) { border-right: 1px solid var(--line); }
+@media (max-width: 700px) { .skill-row:nth-child(odd) { border-right: 0; } .skill-row { grid-template-columns: 1fr; gap: 6px; } }
+.skill-row h3 { font-size: 13px; font-family: var(--mono); color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 3px; }
+
+/* Certs */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 700px) { .two { grid-template-columns: 1fr; } }
+.list { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 20px; }
+.list .item { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; }
+.list .item:last-child { border-bottom: 0; }
+.list .item .t { font-weight: 500; }
+.list .item .s { font-size: 14px; color: var(--muted); }
+.list .item .d { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+/* Contact */
+.contact { margin: 64px 0 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 32px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
+.contact h2 { font-size: 26px; }
+.contact p { margin: 6px 0 0; color: var(--muted); }
+.contact .addr { font-family: var(--mono); font-size: 14px; }
+footer { padding: 32px 0 40px; font-size: 13px; color: var(--muted); font-family: var(--mono); }
+
+/* Hover effects (motion only when the viewer allows it) */
+.card, .job, .btn, .chip, .pill, .stat, .arch .box, .skill-row, .list .item, nav ul a { transition-property: transform, box-shadow, border-color, background-color, color; transition-duration: 0s; }
+nav ul a { position: relative; }
+nav ul a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+nav ul a:hover::after { transform: scaleX(1); }
+.card:hover, .job:hover { border-color: var(--accent); box-shadow: 0 10px 28px -12px rgba(20, 40, 70, 0.28); }
+.card.feature:hover { border-left-color: var(--pass); }
+.card:hover h3, .job:hover h3 { color: var(--accent); }
+.chip:hover { background: var(--accent); color: var(--surface); }
+.pill:hover { background: var(--pass); color: var(--surface); }
+.btn:hover { box-shadow: 0 6px 16px -8px rgba(20, 40, 70, 0.35); }
+.stat:hover { background: var(--accent-soft); }
+.stat:hover .n { color: var(--accent); }
+.arch .box:hover { border-color: var(--accent); background: var(--accent-soft); }
+.arch .box.ci:hover { border-color: var(--pass); background: var(--pass-soft); box-shadow: 0 0 0 3px var(--pass-soft); }
+.skill-row:hover { background: var(--bg); }
+.skill-row:hover h3 { color: var(--accent); }
+.list .item:hover .t { color: var(--accent); }
+.run-head b { display: inline-block; }
+.run:hover .run-head b { color: var(--pass); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .card, .job, .btn, .chip, .pill, .stat, .arch .box, .skill-row, .list .item { transition-duration: 0.22s; transition-timing-function: ease-out; }
+  nav ul a::after { transition: transform 0.22s ease-out; }
+  .card h3, .job h3, .stat .n, .skill-row h3, .list .item .t { transition: color 0.22s ease-out; }
+  .card:hover, .job:hover { transform: translateY(-4px); }
+  .btn:hover { transform: translateY(-2px); }
+  .chip:hover, .pill:hover { transform: translateY(-1px) scale(1.05); }
+  .list .item:hover { transform: translateX(4px); }
+  .hero .tag::before { animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">shaibaz.mohammed</span>
+    <ul>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#framework">Framework</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap">
+  <header class="hero">
+    <span class="tag">Open to Senior SDET and QA Automation Lead roles</span>
+    <h1>Shaibaz Mohammed</h1>
+    <div class="role">Senior SDET &middot; QA Automation Lead &middot; Hyderabad, India</div>
+    <p class="lead">I design UI and API automation frameworks in Java, REST Assured, Selenium and TestNG, wire them into CI/CD with quality gates that stop bad builds, and lead QA teams through strategy, planning and release. Across Zopsmart and Amazon I have built more than 1,600 automated tests and cut a three-day regression cycle down to one.</p>
+    <div class="links">
+      <a class="btn primary" href="https://github.com/Iamshaibaz">GitHub</a>
+      <a class="btn" href="https://linkedin.com/in/iamshaibaz">LinkedIn</a>
+      <a class="btn" href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <div class="run" aria-label="Career summary">
+    <div class="run-head">
+      <span>career-run &middot; Jul 2019 &rarr; present</span>
+      <span><b>&#10003; all suites passed</b></span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n">1,600+</div><div class="l">automated UI, API and backend tests built</div></div>
+      <div class="stat"><div class="n">3d &rarr; 1d</div><div class="l">regression cycle at Zopsmart</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">products with frameworks I architected</div></div>
+      <div class="stat"><div class="n">2,000</div><div class="l">concurrent users in JMeter load tests</div></div>
+      <div class="stat"><div class="n">6</div><div class="l">QA engineers led across products</div></div>
+    </div>
+  </div>
+
+  <section id="projects">
+    <div class="sec-head"><span class="idx">01</span><h2>Featured projects</h2></div>
+    <div class="projects">
+
+      <article class="card feature">
+        <div class="meta"><span>Zopsmart</span><span>2021 &ndash; Present</span><span>Role: Framework architect, QA lead</span></div>
+        <h3>Unified UI and API automation framework for 3 products</h3>
+        <dl>
+          <dt>Problem</dt><dd>Three products ran regression mostly by hand. A full cycle took three days and slowed every release.</dd>
+          <dt>Approach</dt><dd>Built one framework in Java, REST Assured and TestNG. UI tests use the Page Object Model; the API layer is a client built on request specifications, POJO serialization and Builder-based payloads. A ThreadLocal WebDriver makes parallel runs thread-safe, and shared utilities use OOP, Collections and Streams.</dd>
+          <dt>Result</dt><dd><div class="result"><span class="pill">600+ API and backend tests</span><span class="pill">Regression 3 days &rarr; 1 day</span><span class="pill">Parallel execution</span></div></dd>
+        </dl>
+        <div class="chips"><span class="chip">Java</span><span class="chip">REST Assured</span><span class="chip">TestNG</span><span class="chip">Selenium</span><span class="chip">POM</span><span class="chip">Builder</span><span class="chip">ThreadLocal</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>Zopsmart</span><span>Role: CI/CD owner</span></div>
+        <h3>CI quality gates on AWS CodePipeline and Jenkins</h3>
+        <dl>
+          <dt>Problem</dt><dd>Failing builds could still move forward, and test results were hard to find.</dd>
+          <dt>Approach</dt><dd>Ran every suite inside AWS CodePipeline, CodeBuild and Jenkins, added gates that block a build when tests fail, and published an HTML report for each run.</dd>
+          <dt>Result</dt><dd><div class="result"><span class="pill">Failing builds blocked</span><span class="pill">Report on every run</span></div></dd>
+        </dl>
+        <div class="chips"><span class="chip">AWS CodePipeline</span><span class="chip">CodeBuild</span><span class="chip">Jenkins</span><span class="chip">Maven</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>Fintech</span><span>Role: Designer and developer</span></div>
+        <h3>UPI transaction API automation</h3>
+        <dl>
+          <dt>Problem</dt><dd>UPI payment APIs needed repeatable checks on authentication and request integrity.</dd>
+          <dt>Approach</dt><dd>Built a Java and REST Assured framework that automates the payment flows and checks secure authentication and HTTP header validation on each call.</dd>
+          <dt>Result</dt><dd><div class="result"><span class="pill">Auth and header checks automated</span></div></dd>
+        </dl>
+        <div class="chips"><span class="chip">Java</span><span class="chip">REST Assured</span><span class="chip">TestNG</span><span class="chip">API security</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>Zopsmart</span><span>Role: Performance tester</span></div>
+        <h3>Performance, load and stress testing</h3>
+        <dl>
+          <dt>Problem</dt><dd>The team needed to know how services held up under peak traffic before release.</dd>
+          <dt>Approach</dt><dd>Designed JMeter load, stress and performance scenarios that simulate real user journeys at increasing concurrency.</dd>
+          <dt>Result</dt><dd><div class="result"><span class="pill">Up to 2,000 concurrent users</span></div></dd>
+        </dl>
+        <div class="chips"><span class="chip">JMeter</span><span class="chip">Load</span><span class="chip">Stress</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>Open source</span><span>GitHub</span></div>
+        <h3>Java Selenium BDD framework</h3>
+        <dl>
+          <dt>What</dt><dd>A public automation framework with Selenium WebDriver, Cucumber and Maven, written so QA, developers and product owners can read the same Gherkin scenarios.</dd>
+          <dt>Code</dt><dd><a href="https://github.com/Iamshaibaz">github.com/Iamshaibaz</a></dd>
+        </dl>
+        <div class="chips"><span class="chip">Selenium</span><span class="chip">Cucumber</span><span class="chip">Maven</span><span class="chip">BDD</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>Amazon</span><span>2019 &ndash; 2021</span></div>
+        <h3>Test infrastructure and results dashboards</h3>
+        <dl>
+          <dt>Problem</dt><dd>Several teams needed continuous quality checks and a clear view of regression status.</dd>
+          <dt>Approach</dt><dd>Built 1,000+ Selenium and Java tests, set up execution environments on AWS EC2, S3, Lambda and RDS, and fed results into dashboards inside engineering workflows.</dd>
+          <dt>Result</dt><dd><div class="result"><span class="pill">1,000+ automated tests</span><span class="pill">Dashboards for 3 teams</span></div></dd>
+        </dl>
+        <div class="chips"><span class="chip">Selenium</span><span class="chip">Java</span><span class="chip">AWS</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>E-commerce catalog</span></div>
+        <h3>Items curation data validation</h3>
+        <dl>
+          <dt>What</dt><dd>Validated and enriched supplier-provided item attributes so catalog data stayed complete and accurate before it reached customers.</dd>
+        </dl>
+        <div class="chips"><span class="chip">Data validation</span><span class="chip">SQL</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>Robotics</span></div>
+        <h3>Scout robot testing</h3>
+        <dl>
+          <dt>What</dt><dd>Tested scout robots across many scenarios, validated their JSON and XML output, and delivered reports the engineering team could act on.</dd>
+        </dl>
+        <div class="chips"><span class="chip">JSON</span><span class="chip">XML</span><span class="chip">Scenario testing</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="framework">
+    <div class="sec-head"><span class="idx">02</span><h2>How my frameworks are built</h2></div>
+    <div class="arch">
+      <div class="arch-grid">
+        <div class="layer">Tests</div>
+        <div class="boxes">
+          <div class="box"><b>UI suites</b><span>TestNG / Cucumber</span></div>
+          <div class="box"><b>API suites</b><span>REST Assured</span></div>
+          <div class="box"><b>Backend checks</b><span>SQL validation</span></div>
+          <div class="box"><b>Load tests</b><span>JMeter</span></div>
+        </div>
+        <div class="layer">Abstractions</div>
+        <div class="boxes">
+          <div class="box"><b>Page Objects</b><span>one class per screen</span></div>
+          <div class="box"><b>API client</b><span>request specs + POJOs</span></div>
+          <div class="box"><b>Payload builders</b><span>Builder pattern</span></div>
+          <div class="box"><b>Test data</b><span>data-driven providers</span></div>
+        </div>
+        <div class="layer">Core</div>
+        <div class="boxes">
+          <div class="box"><b>Driver manager</b><span>Factory + ThreadLocal</span></div>
+          <div class="box"><b>Config</b><span>Singleton, per environment</span></div>
+          <div class="box"><b>Utilities</b><span>Collections, Streams</span></div>
+          <div class="box"><b>Reporting</b><span>HTML report per run</span></div>
+        </div>
+        <div class="layer">Pipeline</div>
+        <div class="boxes">
+          <div class="box ci"><b>Jenkins / AWS CodePipeline</b><span>parallel run &rarr; quality gate &rarr; publish report</span></div>
+        </div>
+      </div>
+      <p class="arch-note">Each layer only talks to the one below it, so a UI change touches one page object and a new endpoint touches one client method. Thread-safe drivers let the same suite run in parallel on a laptop or in CI.</p>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head"><span class="idx">03</span><h2>Experience</h2></div>
+    <div class="timeline">
+      <article class="job">
+        <div><div class="when">Dec 2021 &ndash; Present</div><div class="co">Zopsmart</div><div class="when">Bengaluru</div></div>
+        <div>
+          <h3>SDET &middot; QA Lead</h3>
+          <ul>
+            <li>Architected UI and API automation frameworks for 3 products with Java, REST Assured and TestNG.</li>
+            <li>Built 600+ automated API and backend tests, cutting the regression cycle from 3 days to 1 day.</li>
+            <li>Implemented thread-safe parallel execution with ThreadLocal WebDriver and TestNG.</li>
+            <li>Integrated suites into AWS CodePipeline, CodeBuild and Jenkins with quality gates and per-run HTML reports.</li>
+            <li>Led a 6-member QA team: test strategy, requirements analysis and sprint planning.</li>
+            <li>Ran JMeter performance, load and stress tests at up to 2,000 concurrent users.</li>
+            <li>Introduced BDD with Cucumber, improving collaboration between QA, development and product.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="job">
+        <div><div class="when">Jul 2019 &ndash; Jun 2021</div><div class="co">Amazon</div><div class="when">Hyderabad</div></div>
+        <div>
+          <h3>Test Automation Engineer</h3>
+          <ul>
+            <li>Developed and maintained 1,000+ automated tests with Selenium and Java.</li>
+            <li>Built scalable test environments on AWS EC2, S3, Lambda and RDS.</li>
+            <li>Integrated automated testing and reporting into engineering workflows for continuous feedback.</li>
+            <li>Created test-result dashboards used by 3 engineering teams.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head"><span class="idx">04</span><h2>Skills</h2></div>
+    <div class="skills">
+      <div class="skill-row"><h3>Languages</h3><div class="chips"><span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">SQL</span></div></div>
+      <div class="skill-row"><h3>UI automation</h3><div class="chips"><span class="chip">Selenium WebDriver</span><span class="chip">Appium</span><span class="chip">Cucumber</span></div></div>
+      <div class="skill-row"><h3>API testing</h3><div class="chips"><span class="chip">REST Assured</span><span class="chip">Postman</span></div></div>
+      <div class="skill-row"><h3>Test runners</h3><div class="chips"><span class="chip">TestNG</span><span class="chip">JUnit</span></div></div>
+      <div class="skill-row"><h3>Patterns</h3><div class="chips"><span class="chip">Page Object Model</span><span class="chip">Factory</span><span class="chip">Singleton</span><span class="chip">Builder</span><span class="chip">Data-driven</span><span class="chip">ThreadLocal</span></div></div>
+      <div class="skill-row"><h3>Performance</h3><div class="chips"><span class="chip">JMeter</span><span class="chip">Load</span><span class="chip">Stress</span></div></div>
+      <div class="skill-row"><h3>CI/CD</h3><div class="chips"><span class="chip">Jenkins</span><span class="chip">AWS CodePipeline</span><span class="chip">AWS CodeBuild</span><span class="chip">GitHub Actions</span><span class="chip">Docker</span><span class="chip">Git</span></div></div>
+      <div class="skill-row"><h3>Cloud and data</h3><div class="chips"><span class="chip">AWS EC2</span><span class="chip">S3</span><span class="chip">Lambda</span><span class="chip">RDS</span><span class="chip">MySQL</span></div></div>
+      <div class="skill-row"><h3>Build tools</h3><div class="chips"><span class="chip">Maven</span><span class="chip">Gradle</span><span class="chip">Linux</span></div></div>
+      <div class="skill-row"><h3>Leadership</h3><div class="chips"><span class="chip">Test strategy</span><span class="chip">Test planning</span><span class="chip">Defect triage</span><span class="chip">Mentoring</span><span class="chip">Agile/Scrum</span></div></div>
+    </div>
+  </section>
+
+  <section id="credentials">
+    <div class="sec-head"><span class="idx">05</span><h2>Certifications and education</h2></div>
+    <div class="two">
+      <div class="list">
+        <div class="item"><div><div class="t">Certified ServiceNow Administrator</div><div class="s">ServiceNow</div></div><div class="d">Jul 2024</div></div>
+        <div class="item"><div><div class="t">Performance Testing with JMeter</div><div class="s">Udemy</div></div><div class="d">Jul 2024</div></div>
+        <div class="item"><div><div class="t">AWS Solutions Architect and Developer Associate</div><div class="s">A Cloud Guru</div></div><div class="d">Jan 2023</div></div>
+      </div>
+      <div class="list">
+        <div class="item"><div><div class="t">B.Tech, Computer Science and Engineering</div><div class="s">JNTUH, Hyderabad</div></div><div class="d">2015 &ndash; 2019</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact" id="contact">
+    <div>
+      <h2>Let&rsquo;s talk quality</h2>
+      <p>Open to Senior SDET and QA Automation Lead roles, in Hyderabad or remote.</p>
+    </div>
+    <div class="links" style="margin-top:0">
+      <a class="btn primary" href="https://linkedin.com/in/iamshaibaz">Message me on LinkedIn</a>
+      <a class="btn" href="https://github.com/Iamshaibaz">GitHub</a>
+    </div>
+  </div>
+</main>
+
+<footer><div class="wrap">&copy; 2026 Shaibaz Mohammed</div></footer>
+
+</body>
+</html>
